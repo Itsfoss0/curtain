@@ -1,8 +1,20 @@
 require('dotenv').config();
 const MONGO_URL = process.env.MONGO_URL;
 const PORT = process.env.PORT;
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
+const ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN || '15m';
+const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
 module.exports = {
   MONGO_URL,
-  PORT
+  PORT,
+  JWT_SECRET,
+  JWT_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN,
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_SECRET,
+  ACCESS_TOKEN_SECRET
 };
