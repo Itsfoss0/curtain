@@ -21,14 +21,14 @@ const registrationSchema = new Schema({
     default: 1,
     required: true
   },
-  totalAmount: {
-    type: Number,
-    required: true
-  },
   status: {
     type: String,
     enum: ['pending', 'confirmed', 'cancelled', 'attended'],
     default: 'pending'
+  },
+  totalAmount: {
+    type: Number,
+    required: true
   },
   paymentInfo: {
     paymentMethod: String,
@@ -45,19 +45,6 @@ const registrationSchema = new Schema({
     default: false
   },
   checkinTime: Date,
-  additionalAttendees: [
-    {
-      name: {
-        type: String,
-        required: true
-      },
-      email: {
-        type: String,
-        required: true
-      }
-    }
-  ],
-  notes: String,
   createdAt: {
     type: Date,
     default: Date.now

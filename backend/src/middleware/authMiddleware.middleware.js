@@ -8,7 +8,7 @@ exports.authenticate = async (req, res, next) => {
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
-        message: 'Authentication required. No token provided.'
+        error: 'Authentication required. No token provided.'
       });
     }
 
@@ -21,7 +21,7 @@ exports.authenticate = async (req, res, next) => {
     if (!user) {
       return res
         .status(401)
-        .json({ message: 'Invalid token. User not found.' });
+        .json({ error: 'Invalid token. User not found.' });
     }
 
     req.user = {
@@ -35,11 +35,11 @@ exports.authenticate = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: 'Invalid token' });
+      return res.status(401).json({ error: 'Invalid token' });
     }
 
     if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: 'Token expired' });
+      return res.status(401).json({ error: 'Token expired' });
     }
 
     res.status(500).json({
@@ -63,7 +63,7 @@ exports.authorize = (roles = []) => {
 
     if (roles.length && !roles.includes(req.user.role)) {
       return res.status(403).json({
-        message: 'Not authorized to access this resource'
+        error: 'Not authorized to access this resource'
       });
     }
     next();
