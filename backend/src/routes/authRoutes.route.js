@@ -1,9 +1,24 @@
 const authController = require('../controllers/auth.controller');
+const { instrumentRoute } = require('../middleware/instrumentation.middleware');
 
 const authRouter = require('express').Router();
 
-authRouter.post('/register', authController.register);
-authRouter.post('/login', authController.login);
-authRouter.post('/token/refresh', authController.refreshToken);
+authRouter.post(
+  '/register',
+  instrumentRoute('auth.register'),
+  authController.register
+);
+
+authRouter.post(
+  '/login',
+  instrumentRoute('auth.login'),
+  authController.login
+);
+
+authRouter.post(
+  '/token/refresh',
+  instrumentRoute('auth.refresh_token'),
+  authController.refreshToken
+);
 
 module.exports = authRouter;
