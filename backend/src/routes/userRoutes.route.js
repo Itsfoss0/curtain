@@ -25,7 +25,7 @@ userRouter.put(
 );
 
 userRouter.delete(
-  '/:userId/delete',
+  '/:userId/',
   authenticate,
   authorize('admin', userController.deleteUser)
 );
