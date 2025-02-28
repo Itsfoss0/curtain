@@ -14,8 +14,6 @@ exports.authenticate = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    console.log(token);
-
     const decoded = jwt.verify(token, JWT_SECRET);
 
     const user = await User.findById(decoded.id);

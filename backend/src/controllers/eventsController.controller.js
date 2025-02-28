@@ -1,11 +1,18 @@
-const Event = require("../models/Event.model");
+const Event = require('../models/Event.model');
 
 // Create a new event
 exports.createEvent = async (req, res) => {
   try {
     const organizer = req.user.id;
-    const { title, description, startDate, endDate, capacity, location } =
-      req.body;
+    const {
+      title,
+      description,
+      startDate,
+      endDate,
+      capacity,
+      location,
+      category
+    } = req.body;
 
     if (
       !title ||
@@ -13,9 +20,10 @@ exports.createEvent = async (req, res) => {
       !startDate ||
       !endDate ||
       !capacity ||
-      !location
+      !location ||
+      !category
     ) {
-      return res.status(400).json({ error: "all fields are required" });
+      return res.status(400).json({ error: 'all fields are required' });
     }
     const event = new Event({
       title,
@@ -25,6 +33,7 @@ exports.createEvent = async (req, res) => {
       capacity,
       location,
       organizer,
+      category
     });
     await event.save();
     res.status(201).json(event);
@@ -43,13 +52,15 @@ exports.getAllEvents = async (req, res) => {
       published,
       page = 1,
       limit = 10,
-      sortBy = "createdAt",
-      order = "desc",
+      tags,
+      sortBy = 'createdAt',
+      order = 'desc'
     } = req.query;
 
     const filter = {};
     if (category) filter.category = category;
-    if (published) filter.published = published === "true";
+    if (tags) filter.tags = tags;
+    if (published) filter.published = published === 'true';
     if (startDate || endDate) {
       filter.startDate = {};
       if (startDate) filter.startDate.$gte = new Date(startDate);
@@ -57,8 +68,8 @@ exports.getAllEvents = async (req, res) => {
     }
 
     const events = await Event.find(filter)
-      .populate("organizer coOrganizers")
-      .sort({ [sortBy]: order === "desc" ? -1 : 1 })
+      .populate('organizer')
+      .sort({ [sortBy]: order === 'desc' ? -1 : 1 })
       .skip((page - 1) * limit)
       .limit(Number(limit));
 
@@ -73,11 +84,10 @@ exports.getAllEvents = async (req, res) => {
 // Get a single event by ID
 exports.getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate(
-      "organizer coOrganizers"
-    );
+    const { eventId } = req.params;
+    const event = await Event.findById(eventId).populate('organizer');
     if (!event) {
-      return res.status(404).json({ error: "Event not found" });
+      return res.status(404).json({ error: 'Event not found' });
     }
     res.json(event);
   } catch (error) {
@@ -86,15 +96,40 @@ exports.getEventById = async (req, res) => {
 };
 
 // Update an event
+
 exports.updateEvent = async (req, res) => {
+  const allowedUpdates = [
+    'title',
+    'description',
+    'category',
+    'startDate',
+    'endDate',
+    'location',
+    'capacity',
+    'tags',
+    'status',
+    'published',
+    'coverImage'
+  ];
   try {
-    const event = await Event.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
+    const { eventId } = req.params;
+
+    const updates = {};
+    for (const key in req.body) {
+      if (allowedUpdates.includes(key)) {
+        updates[key] = req.body[key];
+      }
     }
+
+    const event = await Event.findOneAndUpdate({ _id: eventId }, updates, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
     res.json(event);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -107,16 +142,16 @@ exports.publishEvent = async (req, res) => {
     const { eventId } = req.params;
     const event = await Event.findById(eventId);
     if (!event) {
-      return res.status(404).json({ error: "Event not found" });
+      return res.status(404).json({ error: 'Event not found' });
     }
 
     event.published = !event.published;
-    event.status = event.published ? "published" : "draft";
+    event.status = event.published ? 'published' : 'draft';
     await event.save();
 
     res.json({
-      message: `Event ${event.published ? "published" : "unpublished"}`,
-      event,
+      message: `Event ${event.published ? 'published' : 'unpublished'}`,
+      event
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -126,12 +161,22 @@ exports.publishEvent = async (req, res) => {
 // Delete an event
 exports.deleteEvent = async (req, res) => {
   try {
+    const { id, role } = req.user;
     const { eventId } = req.params;
-    const event = await Event.findByIdAndDelete(eventId);
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
+    const eventToDelete = await Event.findById(eventId);
+
+    if (!eventToDelete) {
+      return res.status(404).json({ error: 'Event not found' });
     }
-    res.json({ message: "Event deleted successfully" });
+
+    // only an organizer  or admin should be able to delete an event
+    const allowedToDelete = eventToDelete.organizer.toString() === id || role === 'admin';
+
+    if (allowedToDelete) {
+      await eventToDelete.deleteOne();
+      return res.status(204).send();
+    }
+    return res.status(403).json({ error: 'not allowed to delete event' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

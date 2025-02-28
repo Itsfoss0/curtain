@@ -11,7 +11,7 @@ eventsRouter.post(
   eventsController.createEvent
 );
 
-eventsRouter.put(
+eventsRouter.patch(
   '/:eventId',
   authMiddleware.authenticate,
   eventsController.updateEvent
