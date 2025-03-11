@@ -15,6 +15,12 @@ authRouter.post(
   authController.login
 );
 
+authRouter.get(
+  '/verify/:id',
+  instrumentRoute('auth.verify'),
+  authController.verify
+);
+
 authRouter.post(
   '/token/refresh',
   instrumentRoute('auth.refresh_token'),

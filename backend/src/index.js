@@ -10,6 +10,7 @@ const userRouter = require('./routes/userRoutes.route');
 const ticketRouter = require('./routes/ticketRoutes.route');
 const eventsRouter = require('./routes/eventsRouter.route');
 const registrationRouter = require('./routes/registrationRoutes.route');
+const paymentRouter = require('./routes/paymentRoutes.route');
 const setUpSwaggerDocs = require('./docs/swagger.docs');
 const { setupOpenTelemetry } = require('./instrumentation/tracing.inst');
 const { pinoLogger } = require('./instrumentation/logging.inst');
@@ -68,5 +69,6 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/events', eventsRouter);
 app.use('/api/v1/registrations', registrationRouter);
 app.use('/api/v1/tickets', ticketRouter);
+app.use('/api/v1/payment', paymentRouter);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

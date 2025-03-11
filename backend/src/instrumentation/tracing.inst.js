@@ -27,13 +27,17 @@ exports.setupOpenTelemetry = () => {
     [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: NODE_ENV
   });
 
-  // Configure exporters
   const traceExporter = new OTLPTraceExporter({
-    url: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+    url:
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT || 'http://otel-collector:4318/v1/traces',
+    headers: {}
   });
 
+  // Configure metrics exporter
   const metricExporter = new OTLPMetricExporter({
-    url: OTEL_EXPORTER_OTLP_METRICS_ENDPOINT
+    url:
+      OTEL_EXPORTER_OTLP_METRICS_ENDPOINT || 'http://otel-collector:4318/v1/metrics',
+    headers: {}
   });
 
   const metricReader = new PeriodicExportingMetricReader({
@@ -48,7 +52,6 @@ exports.setupOpenTelemetry = () => {
     metricReader,
     instrumentations: [
       getNodeAutoInstrumentations({
-        // Enable specific instrumentations with custom configurations
         '@opentelemetry/instrumentation-express': { enabled: true },
         '@opentelemetry/instrumentation-http': { enabled: true },
         '@opentelemetry/instrumentation-mongodb': { enabled: true },
@@ -57,17 +60,22 @@ exports.setupOpenTelemetry = () => {
     ]
   });
 
-  // Initialize the SDK
-  sdk.start();
+  try {
+    sdk.start();
+    console.log('✅ OpenTelemetry SDK initialized successfully.');
+  } catch (err) {
+    console.error('❌ Error initializing OpenTelemetry SDK:', err);
+  }
 
-  process.on('SIGTERM', () => {
-    sdk
-      .shutdown()
-      .then(() => console.log('OpenTelemetry SDK shut down successfully'))
-      .catch((error) =>
-        console.log('Error shutting down OpenTelemetry SDK', error)
-      )
-      .finally(() => process.exit(0));
+  process.on('SIGTERM', async () => {
+    try {
+      await sdk.shutdown();
+      console.log('✅ OpenTelemetry SDK shut down successfully.');
+    } catch (error) {
+      console.log('❌ Error shutting down OpenTelemetry SDK:', error);
+    } finally {
+      process.exit(0);
+    }
   });
 
   return sdk;

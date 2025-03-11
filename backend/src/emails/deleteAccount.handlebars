@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Deletion Confirmation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background-color: #e74c3c;
+        padding: 20px;
+        text-align: center;
+        color: white;
+      }
+
+      .content {
+        padding: 20px;
+        background-color: #ffffff;
+      }
+
+      .info-box {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+
+      .footer {
+        padding: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #888888;
+        background-color: #f9f9f9;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Account Deletion Confirmation</h1>
+      </div>
+      <div class="content">
+        <p>Hello {{name}},</p>
+        <p>
+          We're confirming that your account with scheduleflow has been
+          successfully deleted as requested.
+        </p>
+
+        <div class="info-box">
+          <h2>What This Means</h2>
+          <ul>
+            <li>
+              Your personal information has been removed from our active systems
+            </li>
+            <li>Your login credentials will no longer work</li>
+            <li>Any subscriptions or recurring payments have been canceled</li>
+          </ul>
+        </div>
+        <p>
+          We'd appreciate it if you could take a moment to let us know why you
+          chose to leave:
+        </p>
+        <p style="text-align: center">
+          <a href="{{feedbackLink}}" class="button">Share Your Feedback</a>
+        </p>
+
+        <p>
+          If you believe this was done in error or if you have any questions,
+          please contact our support team at support@scheduleflow.io within the
+          next 3 days, as we may be able to restore your account.
+        </p>
+
+        <p>
+          Best regards,<br />
+          The Scheduleflow Team
+        </p>
+      </div>
+      <div class="footer">
+        <p>
+          This email was sent to {{email}} regarding your account with
+          {{siteName}}.
+        </p>
+        <p>© {{currentYear}} {{companyName}}. All rights reserved.</p>
+        <p>
+          <a href="{{privacyPolicyLink}}">Privacy Policy</a> |
+          <a href="{{termsOfServiceLink}}">Terms of Service</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
