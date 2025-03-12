@@ -165,7 +165,7 @@ export function LoginComponent () {
               <div className='absolute -inset-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl blur opacity-20' />
               <div className='relative rounded-2xl bg-white shadow-xl overflow-hidden'>
                 <img
-                  src='/api/placeholder/500/300'
+                  src='/preview.png'
                   alt='Dashboard Preview'
                   className='w-full h-auto'
                 />
