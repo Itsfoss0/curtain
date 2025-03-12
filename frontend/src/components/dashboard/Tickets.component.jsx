@@ -1,9 +1,11 @@
 import QuickSummary from './QuickSummary.component';
+import DashboardHeader from './DashboardHeader.component';
 
 export default function TicketsContent () {
   return (
     <>
-      <div className='space-y-6'>
+      <DashboardHeader />
+      <div className='space-y-6 mt-4'>
         <QuickSummary />
 
         <div className='flex justify-between items-center mb-4'>

@@ -1,11 +1,12 @@
+import DashboardHeader from './DashboardHeader.component';
 import QuickSummary from './QuickSummary.component';
 
 export default function EventsContent () {
   return (
     <>
-      <div className='space-y-6'>
+      <DashboardHeader />
+      <div className='space-y-6 mt-4'>
         <QuickSummary />
-
         <div className='flex justify-between items-center mb-4'>
           <div>
             <h2 className='text-2xl font-bold'>Events</h2>

@@ -5,6 +5,9 @@ import SettingsContent from '../components/dashboard/Settings.component';
 import CouponsContent from '../components/dashboard/Coupons.component';
 import RegistrationsContent from '../components/dashboard/Registration.component';
 import AnalyticsContent from '../components/dashboard/Analytics.component';
+import PaymentsContent from '../components/dashboard/Payments.component';
+import HomeContent from '../components/dashboard/Home.component';
+
 import {
   Calendar,
   Ticket,
@@ -15,20 +18,24 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  User
+  User,
+  WalletIcon,
+  HomeIcon
 } from 'lucide-react';
 
 const Dashboard = () => {
-  const [activeMenuItem, setActiveMenuItem] = useState('events');
+  const [activeMenuItem, setActiveMenuItem] = useState('home');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const mainMenuItems = [
+    { id: 'home', label: 'Home', icon: HomeIcon },
     { id: 'events', label: 'Events', icon: Calendar },
     { id: 'tickets', label: 'Tickets', icon: Ticket },
     { id: 'registrations', label: 'Registrations', icon: ClipboardList },
     { id: 'coupons', label: 'Coupon Codes', icon: Tag },
     { id: 'analytics', label: 'Analytics', icon: BarChart },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'payment', label: 'Paymets', icon: WalletIcon }
   ];
 
   const profileMenuItems = [
@@ -63,21 +70,26 @@ const Dashboard = () => {
         return <AnalyticsContent />;
       case 'settings':
         return <SettingsContent />;
+      case 'payment':
+        return <PaymentsContent />;
+      case 'home':
+        return <HomeContent />;
       default:
-        return <EventsContent />;
+        return <HomeContent />;
     }
   };
 
   return (
     <div className='flex min-h-screen bg-gray-100'>
+      {/* Sidebar */}
       <div
-        className={`bg-white shadow-lg transition-all duration-300 ${
+        className={`bg-white shadow-lg transition-all duration-300 fixed h-full ${
           isSidebarCollapsed ? 'w-16' : 'w-64'
         }`}
       >
         <div className='p-4 border-b flex items-center justify-between'>
           {!isSidebarCollapsed && (
-            <h1 className='text-xl font-bold'>Event Manager</h1>
+            <h1 className='text-xl font-bold'>Scheduleflow </h1>
           )}
           <button
             onClick={toggleSidebar}
@@ -122,7 +134,7 @@ const Dashboard = () => {
             })}
           </ul>
 
-          {/* User profile and logout section - now closer to settings */}
+          {/* User profile and logout section */}
           <div className='mt-6 pt-6 border-t'>
             <ul className='space-y-2'>
               {profileMenuItems.map((item) => {
@@ -160,7 +172,14 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className='flex-1 p-8 overflow-y-auto'>{renderContent()}</div>
+      {/* Main content */}
+      <div
+        className={`flex-1 px-4 py-2 overflow-y-auto transition-all duration-300 ${
+          isSidebarCollapsed ? 'ml-16' : 'ml-64'
+        }`}
+      >
+        {renderContent()}
+      </div>
     </div>
   );
 };

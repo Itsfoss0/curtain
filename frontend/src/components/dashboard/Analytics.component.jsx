@@ -1,7 +1,10 @@
+import DashboardHeader from './DashboardHeader.component';
+
 export default function AnalyticsContent () {
   return (
     <>
-      <div className='space-y-6'>
+      <DashboardHeader />
+      <div className='space-y-6 mt-4'>
         <div className='flex justify-between items-center mb-4'>
           <div>
             <h2 className='text-2xl font-bold'>Analytics</h2>
