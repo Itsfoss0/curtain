@@ -5,7 +5,6 @@ const {
   DARAJA_PASS_KEY
 } = require('../config/env.config');
 
-const axios = require('axios');
 const Mpesa = require('daraja.js').Mpesa;
 const app = new Mpesa({
   consumerKey: DARAJA_CONSUMER_KEY,
